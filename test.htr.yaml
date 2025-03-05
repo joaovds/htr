@@ -1,0 +1,4 @@
+requests:
+  test:
+    url: urltest
+    method: GET

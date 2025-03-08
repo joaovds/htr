@@ -12,7 +12,7 @@ var rootCmd = &cobra.Command{
 	Short: "htr is a simple HTTP request CLI",
 	Long:  "htr allows you to execute HTTP requests defined in a configuration file.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Use 'htr run <config.yaml> [request_name]' to execute a request.")
+		cmd.Help()
 	},
 }
 

@@ -10,7 +10,7 @@ import (
 )
 
 var runCmd = &cobra.Command{
-	Use:   "run <config.yaml> [request_name]",
+	Use:   "run <path/to/config.yaml> [request_name]",
 	Short: "Executes a request from the configuration file",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {

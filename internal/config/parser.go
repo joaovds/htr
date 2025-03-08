@@ -1,13 +1,18 @@
 package config
 
 import (
+	"errors"
 	"os"
 
 	"gopkg.in/yaml.v3"
 )
 
-func LoadConfig(filename string) (*Config, error) {
-	file, err := os.ReadFile(filename)
+func LoadConfig(filepath string) (*Config, error) {
+	if filepath == "" {
+		return nil, errors.New("you need the path to the file")
+	}
+
+	file, err := os.ReadFile(filepath)
 	if err != nil {
 		return nil, err
 	}

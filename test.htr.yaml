@@ -1,4 +1,11 @@
+baseURL: http://localhost:3333/api/v1
 requests:
-  test:
-    url: urltest
-    method: GET
+  signup:
+    endpoint: /identity/signup
+    method: POST
+    body:
+      name: "any_name"
+      email: "any_mail"
+      password: "any_pass"
+    headers:
+      Content-type: "application/json"

@@ -3,12 +3,12 @@ package request
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
 
 	"github.com/joaovds/htr/internal/config"
+	"github.com/joaovds/htr/internal/ui"
 )
 
 func MakeRequest(baseURL string, reqConfig config.Request) error {
@@ -55,13 +55,16 @@ func MakeRequest(baseURL string, reqConfig config.Request) error {
 	}
 
 	var prettyJSON map[string]any
-	fmt.Println("HttpCode:", resp.StatusCode)
+	var responseJSONStr string
 	if json.Unmarshal(body, &prettyJSON) == nil {
 		pretty, _ := json.MarshalIndent(prettyJSON, "", "  ")
-		fmt.Println(string(pretty))
+		responseJSONStr = string(pretty)
 	} else {
-		fmt.Println(string(body))
+		responseJSONStr = string(body)
 	}
+
+	responseUI := ui.NewResponse(url, resp.StatusCode, responseJSONStr)
+	responseUI.Render()
 
 	return nil
 }

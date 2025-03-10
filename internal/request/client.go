@@ -11,12 +11,22 @@ import (
 	"github.com/joaovds/htr/internal/ui"
 )
 
-func MakeRequest(baseURL string, reqConfig config.Request) error {
+type request struct {
+	baseURL   string
+	reqConfig config.Request
+	noStyle   bool
+}
+
+func New(baseURL string, reqConfig config.Request, noStyle bool) *request {
+	return &request{baseURL, reqConfig, noStyle}
+}
+
+func (r *request) Run() error {
 	client := &http.Client{}
 
 	var bodyReader io.Reader
-	if reqConfig.Body != nil {
-		jsonBody, err := json.Marshal(reqConfig.Body)
+	if r.reqConfig.Body != nil {
+		jsonBody, err := json.Marshal(r.reqConfig.Body)
 		if err != nil {
 			return err
 		}
@@ -24,22 +34,22 @@ func MakeRequest(baseURL string, reqConfig config.Request) error {
 	}
 
 	var url string
-	if reqConfig.Url != "" {
-		url = reqConfig.Url
+	if r.reqConfig.Url != "" {
+		url = r.reqConfig.Url
 	} else {
-		if baseURL != "" && reqConfig.Endpoint != "" {
-			url = baseURL + reqConfig.Endpoint
+		if r.baseURL != "" && r.reqConfig.Endpoint != "" {
+			url = r.baseURL + r.reqConfig.Endpoint
 		} else {
 			return errors.New("url or baseURL with required endpoint")
 		}
 	}
 
-	req, err := http.NewRequest(reqConfig.Method, url, bodyReader)
+	req, err := http.NewRequest(r.reqConfig.Method, url, bodyReader)
 	if err != nil {
 		return err
 	}
 
-	for key, value := range reqConfig.Headers {
+	for key, value := range r.reqConfig.Headers {
 		req.Header.Set(key, value)
 	}
 
@@ -63,7 +73,7 @@ func MakeRequest(baseURL string, reqConfig config.Request) error {
 		responseJSONStr = string(body)
 	}
 
-	responseUI := ui.NewResponse(url, resp.StatusCode, responseJSONStr)
+	responseUI := ui.NewResponse(url, resp.StatusCode, responseJSONStr, r.noStyle)
 	responseUI.Render()
 
 	return nil

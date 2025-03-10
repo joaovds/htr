@@ -14,6 +14,7 @@ var runCmd = &cobra.Command{
 	Short: "Executes a request from the configuration file",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		noStyle, _ := cmd.Flags().GetBool("no-style")
 		filename := args[0]
 
 		cfg, err := config.LoadConfig(filename)
@@ -37,7 +38,9 @@ var runCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		if err := request.MakeRequest(cfg.BaseURL, reqConfig); err != nil {
+		req := request.New(cfg.BaseURL, reqConfig, noStyle)
+
+		if err := req.Run(); err != nil {
 			fmt.Println("Request failed:", err)
 			os.Exit(1)
 		}
@@ -45,5 +48,6 @@ var runCmd = &cobra.Command{
 }
 
 func init() {
+	runCmd.Flags().BoolP("no-style", "n", false, "Exit without stylization")
 	rootCmd.AddCommand(runCmd)
 }

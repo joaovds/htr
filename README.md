@@ -11,7 +11,7 @@ HTR é uma ferramenta de linha de comando (CLI) construída em Golang para facil
 - A ferramenta é projetada para ser simples de usar e extensível.
 
 <div style="display: flex;">
-    <img src="./.github/htr.gif" alt="htr gif" height="auto">
+    <img src="./.github/htr.jpg" alt="htr gif" height="auto">
 </div>
 
 ## Instalação

@@ -9,3 +9,5 @@ requests:
       password: "any_pass"
     headers:
       Content-type: "application/json"
+headers:
+  Authentication: "Bearer token"

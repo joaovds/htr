@@ -3,6 +3,7 @@ package request
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -12,13 +13,14 @@ import (
 )
 
 type request struct {
-	baseURL   string
-	reqConfig config.Request
-	noStyle   bool
+	baseURL       string
+	globalHeaders map[string]string
+	reqConfig     config.Request
+	noStyle       bool
 }
 
-func New(baseURL string, reqConfig config.Request, noStyle bool) *request {
-	return &request{baseURL, reqConfig, noStyle}
+func New(baseURL string, reqConfig config.Request, globalHeaders map[string]string, noStyle bool) *request {
+	return &request{baseURL, globalHeaders, reqConfig, noStyle}
 }
 
 func (r *request) Run() error {
@@ -49,6 +51,10 @@ func (r *request) Run() error {
 		return err
 	}
 
+	fmt.Println(r.globalHeaders)
+	for key, value := range r.globalHeaders {
+		req.Header.Set(key, value)
+	}
 	for key, value := range r.reqConfig.Headers {
 		req.Header.Set(key, value)
 	}

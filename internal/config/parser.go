@@ -10,6 +10,7 @@ import (
 type (
 	Config struct {
 		BaseURL  string             `yaml:"baseURL" json:"baseURL"`
+		Headers  map[string]string  `yaml:"headers" json:"headers"`
 		Requests map[string]Request `yaml:"requests" json:"requests"`
 	}
 

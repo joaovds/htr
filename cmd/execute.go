@@ -38,7 +38,7 @@ var runCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		req := request.New(cfg.BaseURL, reqConfig, noStyle)
+		req := request.New(cfg.BaseURL, reqConfig, cfg.Headers, noStyle)
 
 		if err := req.Run(); err != nil {
 			fmt.Println("Request failed:", err)

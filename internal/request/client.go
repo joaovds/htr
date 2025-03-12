@@ -3,7 +3,6 @@ package request
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -51,7 +50,6 @@ func (r *request) Run() error {
 		return err
 	}
 
-	fmt.Println(r.globalHeaders)
 	for key, value := range r.globalHeaders {
 		req.Header.Set(key, value)
 	}

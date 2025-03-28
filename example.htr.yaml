@@ -13,4 +13,4 @@ requests:
     url: https://google.com
     method: GET
 headers:
-  Authentication: "Bearer token"
+  Authentication: "Bearer #{{token}}"

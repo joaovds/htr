@@ -10,17 +10,19 @@ import (
 type (
 	Config struct {
 		BaseURL  string             `yaml:"baseURL" json:"baseURL"`
-		Headers  map[string]string  `yaml:"headers" json:"headers"`
+		Headers  Headers            `yaml:"headers" json:"headers"`
 		Requests map[string]Request `yaml:"requests" json:"requests"`
 	}
 
 	Request struct {
-		Url      string            `yaml:"url" json:"url"`
-		Endpoint string            `yaml:"endpoint" json:"endpoint"`
-		Method   string            `yaml:"method" json:"method"`
-		Body     any               `yaml:"body" json:"body"`
-		Headers  map[string]string `yaml:"headers" json:"headers"`
+		Url      string  `yaml:"url" json:"url"`
+		Endpoint string  `yaml:"endpoint" json:"endpoint"`
+		Method   string  `yaml:"method" json:"method"`
+		Body     any     `yaml:"body" json:"body"`
+		Headers  Headers `yaml:"headers" json:"headers"`
 	}
+
+	Headers map[string]string
 )
 
 func LoadConfig(filepath string) (*Config, error) {

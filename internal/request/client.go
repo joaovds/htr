@@ -3,6 +3,7 @@ package request
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -15,14 +16,34 @@ type request struct {
 	baseURL       string
 	globalHeaders map[string]string
 	reqConfig     config.Request
+	args          map[string]string
 	noStyle       bool
 }
 
-func New(baseURL string, reqConfig config.Request, globalHeaders map[string]string, noStyle bool) *request {
-	return &request{baseURL, globalHeaders, reqConfig, noStyle}
+func New(baseURL string, reqConfig config.Request, globalHeaders map[string]string, args []string, noStyle bool) *request {
+	return &request{baseURL, globalHeaders, reqConfig, parseArgs(args), noStyle}
+}
+
+func parseArgs(args []string) map[string]string {
+	values := make(map[string]string)
+	for _, arg := range args {
+		if strings.HasPrefix(arg, "-") {
+			continue
+		}
+		parts := strings.SplitN(arg, "=", 2)
+		if len(parts) == 2 {
+			values[parts[0]] = parts[1]
+		}
+	}
+	return values
 }
 
 func (r *request) Run() error {
+	err := r.applyReplacements()
+	if err != nil {
+		return err
+	}
+
 	client := &http.Client{}
 
 	var bodyReader io.Reader
@@ -81,4 +102,31 @@ func (r *request) Run() error {
 	responseUI.Render()
 
 	return nil
+}
+
+func (r *request) applyReplacements() error {
+	placeholders := r.getPlaceholders()
+
+	for _, placeholder := range placeholders {
+		if _, exists := r.args[placeholder]; !exists {
+			return fmt.Errorf("missing required parameter: %s", placeholder)
+		}
+	}
+
+	for key, value := range r.globalHeaders {
+		r.globalHeaders[key] = r.replacePlaceholders(value)
+	}
+	for key, value := range r.reqConfig.Headers {
+		r.reqConfig.Headers[key] = r.replacePlaceholders(value)
+	}
+
+	return nil
+}
+
+func (r *request) replacePlaceholders(input string) string {
+	for key, value := range r.args {
+		placeholder := fmt.Sprintf("#{{%s}}", key)
+		input = strings.ReplaceAll(input, placeholder, value)
+	}
+	return input
 }

@@ -74,7 +74,7 @@ requests:
     url: https://google.com
     method: GET
 headers:
-  Authentication: "Bearer token"
+  Authentication: "Bearer #{{token}}"
 ```
 
 O arquivo de configuração pode estar em qualquer lugar, desde que, no momento que executar o comando "run", você passe o caminho a partir do diretório atual até o arquivo de configuração. O arquivo pode ter qualquer nome também, sendo necessário apenas ser um arquivo _yaml_ e seguir a estrutura indicada.
@@ -98,6 +98,13 @@ O arquivo de configuração pode estar em qualquer lugar, desde que, no momento 
   - Pode ser passado de forma global, assim como baseURL. Na raiz do arquivo, defina em _headers_ os headers global
   - A estrutura segue chave:valor
   - Headers globais serão passados em todas as requisições definidas no arquivo; já os headers dentro de uma requisição específica, serão usados apenas na mesma
+- Sobre _placeholders_:
+  - Placeholders é uma funcionalidade disponível somente para os headers por enquanto
+  - Os placeholders são valores que serão inseridos no próprio comando
+  - Para adicionar um placeholder, basta colocar no valor do header `#{{nome_do_param}}`
+  - Ao rodar algum endpoint que tem placeholder, o valor deverá ser passado, caso contrário, não irá executar
+  - para substituir o placeholder por um valor, basta passar no comando um argumento com o nome do placeholder, seguido de `=seu_valor`
+  - exemplo: `htr run path/to/htr.yaml chamar_esse_endpoint nome_do_param=my_param_value`
 
 ## Contribuição
 
@@ -106,5 +113,5 @@ Deixe sua estrela no repositório, teste a ferramente, crie um fork. Todos são 
 
 ## Futuro
 
-Podemos implementar novas features, como novos params, adicionar descrições nas requests, retornar o tempo da requisição, etc.
+Podemos implementar novas features, como novos params (placeholders para valores além do header), adicionar descrições nas requests, retornar o tempo da requisição, etc.
 Quem sabe adicionar os executáveis nos repositórios de distribuições linux para uma instalação rápida, etc
